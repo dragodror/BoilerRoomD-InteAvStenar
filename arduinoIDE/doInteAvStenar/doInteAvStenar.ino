@@ -15,7 +15,7 @@ const byte rowPlayer[3]{};
 
 //Variabler för elektroniken
 
-//int row1Pos{}; //Same variable as newStonePos
+int row1Pos{}; 
 int row2Pos{};
 int row3Pos{};
 int row4Pos{};
@@ -85,7 +85,7 @@ void updateGrid() {
   row2Pos = row1Pos;
   turnOnLED(row1, newStonePos);
 
-  turnOnLED(rowIn1, playerpos);
+  turnOnLED(rowPlayer, currentPlayerPos);
 }
 
 void handleRIGHTInterrupt() {
@@ -98,7 +98,7 @@ void handleRIGHTInterrupt() {
     player[currentPlayerPos] = 1;
   }
   //Update position in player row
-  turnOnLED(player, playerpos);
+  turnOnLED(rowPlayer, currentPlayerPos);
 }
 
 void handleLEFTInterrupt() {
@@ -112,13 +112,8 @@ void handleLEFTInterrupt() {
     player[currentPlayerPos] = 1;
   }
   //Update position in player row
-  turnOnLED(player, playerpos);
+  turnOnLED(rowPlayer, currentPlayerPos);
 }
-
-
-void updaterLED(byte[5] & copyFrom, byte[5] & copyTo) {
-}
-
 
 
 void turnOnLED(const byte[3] & row, int LEDon) {
