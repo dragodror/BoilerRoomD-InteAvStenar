@@ -1,10 +1,9 @@
 
 //Constants for Electronics
-
 const int RIGHTInterruptPin = __;  //Right-button pin
 const int LEFTInterruptPin = __;   //Left-button pin
 
-const byte rowIn1[3]{};  //Pins in for charlieplexing in row n
+const byte rowIn1[3]{};  //Pin in charlieplexing för rad
 const byte rowIn2[3]{};
 const byte rowIn3[3]{};
 const byte rowIn4[3]{};
@@ -14,10 +13,9 @@ const byte rowPlayer[3]{};
 
 
 
-//Variales for electronics
+//Variabler för elektroniken
 
-//Positions of 'stone in row'
-int row1Pos{};
+//int row1Pos{}; //Same variable as newStonePos
 int row2Pos{};
 int row3Pos{};
 int row4Pos{};
@@ -27,8 +25,7 @@ int row6Pos{};
 
 
 
-//Variables for game logic
-
+//Variabler för spellogiken
 byte rad1[5] = { 0, 0, 0, 0, 0 };
 byte rad2[5] = { 0, 0, 0, 0, 0 };
 byte rad3[5] = { 0, 0, 0, 0, 0 };
@@ -38,7 +35,7 @@ byte rad6[5] = { 0, 0, 0, 0, 0 };
 byte player[5] = { 0, 0, 1, 0, 0 };
 
 //int points = 0;
-int currentPlayerPos = 2;  //Also used for elecronic logic
+int currentPlayerPos = 2;
 int life = 3;
 
 void setup() {
@@ -88,13 +85,11 @@ void updateGrid() {
   row2Pos = row1Pos;
   turnOnLED(row1, newStonePos);
 
-  turnOnLED(rowPlayer, currentPlayerPos);
+  turnOnLED(rowIn1, playerpos);
 }
 
 void handleRIGHTInterrupt() {
   //Move position one step to the right
-
-  //Add debouncing______
   if (currentPlayerPos < 4) {
     player[currentPlayerPos] = 0;
     currentPlayerPos++;
@@ -103,13 +98,12 @@ void handleRIGHTInterrupt() {
     player[currentPlayerPos] = 1;
   }
   //Update position in player row
-  turnOnLED(rowPlayer, currentPlayerPos);
+  turnOnLED(player, playerpos);
 }
 
 void handleLEFTInterrupt() {
+  //Update position in player row
   //Move position one step to the left
-
-  //Add debouncing_____
   if (currentPlayerPos > 0) {
     player[currentPlayerPos] = 0;
     currentPlayerPos--;
@@ -118,8 +112,13 @@ void handleLEFTInterrupt() {
     player[currentPlayerPos] = 1;
   }
   //Update position in player row
-  turnOnLED(rowPlayer, currentPlayerPos);
+  turnOnLED(player, playerpos);
 }
+
+
+void updaterLED(byte[5] & copyFrom, byte[5] & copyTo) {
+}
+
 
 
 void turnOnLED(const byte[3] & row, int LEDon) {
@@ -132,7 +131,6 @@ void turnOnLED(const byte[3] & row, int LEDon) {
         digitalWrite(row[2], HIGH);
         pinMode(row[3], INPUT);
         digitalWrite(row[3], LOW);
-        break;
       }
     case 2:
       {
@@ -142,7 +140,6 @@ void turnOnLED(const byte[3] & row, int LEDon) {
         digitalWrite(row[2], LOW);
         pinMode(row[3], INPUT);
         digitalWrite(row[3], LOW);
-        break;
       }
 
     case 3:
@@ -153,7 +150,6 @@ void turnOnLED(const byte[3] & row, int LEDon) {
         digitalWrite(row[2], LOW);
         pinMode(row[3], OUTPUT);
         digitalWrite(row[3], HIGH);
-        break;
       }
 
     case 4:
@@ -164,7 +160,6 @@ void turnOnLED(const byte[3] & row, int LEDon) {
         digitalWrite(row[2], HIGH);
         pinMode(row[3], OUTPUT);
         digitalWrite(row[3], LOW);
-        break;
       }
 
     case 5:
@@ -175,7 +170,6 @@ void turnOnLED(const byte[3] & row, int LEDon) {
         digitalWrite(row[2], LOW);
         pinMode(row[3], OUTPUT);
         digitalWrite(row[3], HIGH);
-        break;
       }
 
     case 6:
@@ -186,7 +180,6 @@ void turnOnLED(const byte[3] & row, int LEDon) {
         digitalWrite(row[2], LOW);
         pinMode(row[3], OUTPUT);
         digitalWrite(row[3], LOW);
-        break;
       }
   }
 }
