@@ -62,9 +62,9 @@ void addHighsore(int time)
 			//Three letter identifier for new highscore
 			char inputName[3]{};
 
-			std::cout << "Write your identifier, three letters" << std::endl;
+			//Write out "Write your identifier, three letters" in serial monitor
 
-			std::cin >> inputName;
+			//Get inputName from serial monitor
 			
 			std::string newLine = inputName + ' ' + time;
 
@@ -101,7 +101,8 @@ void printHighscore()
 	{
 		std::string line{};
 		getline(file, line);
-		std::cout << i+1 << ": " << line;
+
+		//Write out i+1 + ": " + line i serial monitor
 	} 
 
 	return;
