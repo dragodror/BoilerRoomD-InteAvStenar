@@ -5,8 +5,8 @@
 
 //Constants for Electronics
 
-const int RIGHTInterruptPin = 9;  //Right-button pin (WHITE)
-const int LEFTInterruptPin = 8;   //Left-button pin (GREY)
+const int buttonPin1 = 9;  //Right-button pin (WHITE)
+const int buttonPin2 = 8;  //Left-button pin (GREY)
 
 //player pins
 const byte rowPlayer[3]{ 13, 12, 11 };
@@ -23,7 +23,7 @@ byte rad6[5] = { 0, 0, 0, 0, 0 };
 byte player[5] = { 0, 0, 1, 0, 0 };
 
 //nya
-int row1Pos{};    //Position for the stone in each row
+int row1Pos{};  //Position for the stone in each row
 int row2Pos{};
 int row3Pos{};
 int row4Pos{};
@@ -46,13 +46,124 @@ int gameEsculate = 50;
 bool first = true;
 
 
+//Debouncing variables
+
+const unsigned long debounceDelay = 50;
+
+byte lastButtonState1 = LOW;
+byte buttonState1 = LOW;
+unsigned long lastDebounceTime1 = 0;
+
+byte lastButtonState2 = LOW;
+byte buttonState2 = LOW;
+unsigned long lastDebounceTime2 = 0;
+
+void turnOnLED(const byte row[], int LEDon) {
+  switch (LEDon) {
+    case 1:
+      {
+        pinMode(row[0], INPUT);
+        digitalWrite(row[0], LOW);
+        pinMode(row[1], OUTPUT);
+        digitalWrite(row[1], LOW);
+        pinMode(row[2], OUTPUT);
+        digitalWrite(row[2], HIGH);
+
+        break;
+      }
+    case 2:
+      {
+        pinMode(row[0], OUTPUT);
+        digitalWrite(row[0], HIGH);
+        pinMode(row[1], INPUT);
+        digitalWrite(row[1], LOW);
+        pinMode(row[2], OUTPUT);
+        digitalWrite(row[2], LOW);
+
+        break;
+      }
+
+    case 3:
+      {
+        pinMode(row[0], OUTPUT);
+        digitalWrite(row[0], LOW);
+        pinMode(row[1], INPUT);
+        digitalWrite(row[1], LOW);
+        pinMode(row[2], OUTPUT);
+        digitalWrite(row[2], HIGH);
+
+        break;
+      }
+
+    case 4:
+      {
+        pinMode(row[0], OUTPUT);
+        digitalWrite(row[0], LOW);
+        pinMode(row[1], OUTPUT);
+        digitalWrite(row[1], HIGH);
+        pinMode(row[2], INPUT);
+        digitalWrite(row[2], LOW);
+
+        break;
+      }
+
+    case 5:
+      {
+        pinMode(row[0], OUTPUT);
+        digitalWrite(row[0], HIGH);
+        pinMode(row[1], OUTPUT);
+        digitalWrite(row[1], LOW);
+        pinMode(row[2], INPUT);
+        digitalWrite(row[2], LOW);
+
+        break;
+      }
+  }
+}
+
+
+void moveRight() {
+  //Move position one step to the right
+
+  //Add debouncing______!!!!!!!!
+
+
+  if (currentPlayerPos < 5) {
+    //Uppdatera spellogiken
+    player[currentPlayerPos] = 0;
+    currentPlayerPos++;
+    player[currentPlayerPos] = 1;
+  }
+
+  //Update electronics with new player position
+  turnOnLED(rowPlayer, currentPlayerPos);
+}
+
+void moveLeft() {
+  //Move position one step to the left
+
+  //Add debouncing_____!!!!!!!
+
+  //Uppdatera spellogiken
+  if (currentPlayerPos > 1) {
+    player[currentPlayerPos] = 0;
+    currentPlayerPos--;
+    player[currentPlayerPos] = 1;
+  }
+
+  //Update electronics with new player position
+  turnOnLED(rowPlayer, currentPlayerPos);
+}
+
 void setup() {
-  pinMode(RIGHTInterruptPin, INPUT);
-  pinMode(LEFTInterruptPin, INPUT);
-  attachInterrupt(digitalPinToInterrupt(RIGHTInterruptPin), handleRIGHTInterrupt, RISING);
-  attachInterrupt(digitalPinToInterrupt(LEFTInterruptPin), handleLEFTInterrupt, RISING);
+  pinMode(buttonPin1, INPUT);
+  pinMode(buttonPin2, INPUT);
+  //attachInterrupt(digitalPinToInterrupt(RIGHTInterruptPin), handleRIGHTInterrupt, RISING);
+  //attachInterrupt(digitalPinToInterrupt(LEFTInterruptPin), handleLEFTInterrupt, RISING);
   Serial.begin(9600);
 }
+
+bool dead = false;
 
 void loop() {
   //Function loop
@@ -67,6 +178,53 @@ void loop() {
     handleLEFTInterrupt();
     */
 
+  if (dead)
+  {
+    while(true)
+    {
+
+    }
+  }
+  byte reading = digitalRead(buttonPin1);
+
+  if (reading != lastButtonState1) {
+    lastDebounceTime1 = millis();
+  }
+
+  if ((millis() - lastDebounceTime1) > debounceDelay) {
+    if (reading != buttonState1) {
+      buttonState1 = reading;
+
+      if (HIGH == buttonState1) {
+        moveRight();
+      }
+    }
+  }
+
+  lastButtonState1 = reading;
+
+  //////
+
+  reading = digitalRead(buttonPin2);
+
+  if (reading != lastButtonState2) {
+    lastDebounceTime2 = millis();
+  }
+
+  if ((millis() - lastDebounceTime2) > debounceDelay) {
+    if (reading != buttonState2) {
+      buttonState2 = reading;
+
+      if (HIGH == buttonState2) {
+        moveLeft();
+      }
+    }
+  }
+
+
+  lastButtonState2 = reading;
+
+
   if (first) {
     turnOnLED(rowPlayer, currentPlayerPos);
     first = false;
@@ -78,6 +236,7 @@ void loop() {
   if (currentTime - lastUpdate > updateFrequency) {
     if (checkCollision()) {
       life--;
+      dead = true;
     }
 
     updateGrid();
@@ -121,111 +280,4 @@ void updateGrid() {
 
   //Update stone position in row 1 for game logic
   rad1[newStonePos] = 1;
-}
-
-void handleRIGHTInterrupt() {
-  //Move position one step to the right
-
-  //Add debouncing______!!!!!!!!
-
-
-  if (currentPlayerPos < 5) {
-    //Uppdatera spellogiken
-    player[currentPlayerPos] = 0;
-    currentPlayerPos++;
-    player[currentPlayerPos] = 1;
-  }
-
-  //Update electronics with new player position
-  turnOnLED(rowPlayer, currentPlayerPos);
-}
-
-void handleLEFTInterrupt() {
-  //Move position one step to the left
-
-  //Add debouncing_____!!!!!!!
-
-  //Uppdatera spellogiken
-  if (currentPlayerPos > 1) {
-    player[currentPlayerPos] = 0;
-    currentPlayerPos--;
-    player[currentPlayerPos] = 1;
-  }
-
-  //Update electronics with new player position
-  turnOnLED(rowPlayer, currentPlayerPos);
-}
-
-
-void turnOnLED(const byte row[], int LEDon) {
-  switch (LEDon) {
-    case 1:
-      {
-        pinMode(row[0], INPUT);
-        digitalWrite(row[0], LOW);
-        pinMode(row[1], OUTPUT);
-        digitalWrite(row[1], LOW);
-        pinMode(row[2], OUTPUT);
-        digitalWrite(row[2], HIGH);
-
-        Serial.println("case 1\n");
-
-        break;
-      }
-    case 2:
-      {
-        pinMode(row[0], OUTPUT);
-        digitalWrite(row[0], HIGH);
-        pinMode(row[1], INPUT);
-        digitalWrite(row[1], LOW);
-        pinMode(row[2], OUTPUT);
-        digitalWrite(row[2], LOW);
-
-        Serial.println("case 2\n");
-
-        break;
-      }
-
-    case 3:
-      {
-        pinMode(row[0], OUTPUT);
-        digitalWrite(row[0], LOW);
-        pinMode(row[1], INPUT);
-        digitalWrite(row[1], LOW);
-        pinMode(row[2], OUTPUT);
-        digitalWrite(row[2], HIGH);
-
-        Serial.println("case 3\n");
-
-        break;
-      }
-
-    case 4:
-      {
-        pinMode(row[0], OUTPUT);
-        digitalWrite(row[0], LOW);
-        pinMode(row[1], OUTPUT);
-        digitalWrite(row[1], HIGH);
-        pinMode(row[2], INPUT);
-        digitalWrite(row[2], LOW);
-
-        Serial.println("case 4\n");
-
-        break;
-      }
-
-    case 5:
-      {
-        pinMode(row[0], OUTPUT);
-        digitalWrite(row[0], HIGH);
-        pinMode(row[1], OUTPUT);
-        digitalWrite(row[1], LOW);
-        pinMode(row[2], INPUT);
-        digitalWrite(row[2], LOW);
-
-        Serial.println("case 5\n");
-
-        break;
-      }
-  }
 }

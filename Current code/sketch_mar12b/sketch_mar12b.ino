@@ -36,8 +36,6 @@ void turnOnLED(const byte row[], int LEDon) {
         pinMode(row[2], OUTPUT);
         digitalWrite(row[2], HIGH);
         
-        Serial.println("case 1\n");
-        
         break;
       }
     case 2:
@@ -48,8 +46,6 @@ void turnOnLED(const byte row[], int LEDon) {
         digitalWrite(row[1], LOW);
         pinMode(row[2], OUTPUT);
         digitalWrite(row[2], LOW);
-        
-        Serial.println("case 2\n");
         
         break;
       }
@@ -63,8 +59,6 @@ void turnOnLED(const byte row[], int LEDon) {
         pinMode(row[2], OUTPUT);
         digitalWrite(row[2], HIGH);
         
-        Serial.println("case 3\n");
-        
         break;
       }
 
@@ -77,8 +71,6 @@ void turnOnLED(const byte row[], int LEDon) {
         pinMode(row[2], INPUT);
         digitalWrite(row[2], LOW);
         
-        Serial.println("case 4\n");
-        
         break;
       }
 
@@ -90,8 +82,6 @@ void turnOnLED(const byte row[], int LEDon) {
         digitalWrite(row[1], LOW);
         pinMode(row[2], INPUT);
         digitalWrite(row[2], LOW);
-        
-        Serial.println("case 5\n");
         
         break;
       }
@@ -107,8 +97,6 @@ void turnOnLEDAnalog(const byte row[], int LEDon) {
         digitalWrite(row[1], 1023);
         pinMode(row[2], OUTPUT);
         digitalWrite(row[2], 0);
-
-        Serial.println("case 1\n");
         
         break;
       }
@@ -120,8 +108,6 @@ void turnOnLEDAnalog(const byte row[], int LEDon) {
         digitalWrite(row[1], 0);
         pinMode(row[2], INPUT);
         digitalWrite(row[2], 0);
-         
-        Serial.println("case 2\n");
         
         break;
       }
@@ -134,8 +120,6 @@ void turnOnLEDAnalog(const byte row[], int LEDon) {
         digitalWrite(row[1], 1023);
         pinMode(row[2], INPUT);
         digitalWrite(row[2], 0);
-
-        Serial.println("case 3\n");
         
         break;
       }
@@ -149,8 +133,6 @@ void turnOnLEDAnalog(const byte row[], int LEDon) {
         pinMode(row[2], OUTPUT);
         digitalWrite(row[2], 0);
         
-        Serial.println("case 4\n");
-        
         break;
       }
 
@@ -162,8 +144,6 @@ void turnOnLEDAnalog(const byte row[], int LEDon) {
         digitalWrite(row[1], 0);
         pinMode(row[2], OUTPUT);
         digitalWrite(row[2], 1023);
-   
-        Serial.println("case 5\n");
         
         break;
       }
