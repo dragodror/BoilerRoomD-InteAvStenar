@@ -11,17 +11,6 @@ const int buttonPin2 = 8;  //Left-button pin (GREY)
 //player pins
 const byte rowPlayer[3]{ 13, 12, 11 };
 
-
-//Variables for game logic
-
-byte rad1[5] = { 0, 0, 0, 0, 0 };
-byte rad2[5] = { 0, 0, 0, 0, 0 };
-byte rad3[5] = { 0, 0, 0, 0, 0 };
-byte rad4[5] = { 0, 0, 0, 0, 0 };
-byte rad5[5] = { 0, 0, 0, 0, 0 };
-byte rad6[5] = { 0, 0, 0, 0, 0 };
-byte player[5] = { 0, 0, 1, 0, 0 };
-
 //nya
 int row1Pos{};  //Position for the stone in each row
 int row2Pos{};
@@ -35,13 +24,12 @@ int row6Pos{};
 int currentPlayerPos = 3;  //Also used for elecronic logic
 int life = 3;
 
-//byte checkInterruptLeft = LOW;
-//byte checkInterruptRight = LOW;
 
 //Variables constants for time management
 int updateFrequency = 800;  //starting speed for the game
 int lastUpdate{};
-int gameEsculate = 50;
+int gameEsculate = 200;
+int updates{ 1 };
 
 bool first = true;
 
@@ -58,8 +46,20 @@ byte lastButtonState2 = LOW;
 byte buttonState2 = LOW;
 unsigned long lastDebounceTime2 = 0;
 
+
 void turnOnLED(const byte row[], int LEDon) {
   switch (LEDon) {
+    case 0:
+    {
+        pinMode(row[0], INPUT);
+        digitalWrite(row[0], 0);
+        pinMode(row[1], OUTPUT);
+        digitalWrite(row[1], 0);
+        pinMode(row[2], OUTPUT);
+        digitalWrite(row[2], 0);
+
+        break;
+    }
     case 1:
       {
         pinMode(row[0], INPUT);
@@ -125,14 +125,8 @@ void turnOnLED(const byte row[], int LEDon) {
 void moveRight() {
   //Move position one step to the right
 
-  //Add debouncing______!!!!!!!!
-
-
   if (currentPlayerPos < 5) {
-    //Uppdatera spellogiken
-    player[currentPlayerPos] = 0;
     currentPlayerPos++;
-    player[currentPlayerPos] = 1;
   }
 
   //Update electronics with new player position
@@ -142,13 +136,8 @@ void moveRight() {
 void moveLeft() {
   //Move position one step to the left
 
-  //Add debouncing_____!!!!!!!
-
-  //Uppdatera spellogiken
   if (currentPlayerPos > 1) {
-    player[currentPlayerPos] = 0;
     currentPlayerPos--;
-    player[currentPlayerPos] = 1;
   }
 
   //Update electronics with new player position
@@ -158,8 +147,6 @@ void moveLeft() {
 void setup() {
   pinMode(buttonPin1, INPUT);
   pinMode(buttonPin2, INPUT);
-  //attachInterrupt(digitalPinToInterrupt(RIGHTInterruptPin), handleRIGHTInterrupt, RISING);
-  //attachInterrupt(digitalPinToInterrupt(LEFTInterruptPin), handleLEFTInterrupt, RISING);
   Serial.begin(9600);
 }
 
@@ -167,24 +154,15 @@ bool dead = false;
 
 void loop() {
   //Function loop
-  /*
-  byte readLeft = digitalRead(RIGHTInterruptPin);
-  byte readRight = digitalRead(LEFTInterruptPin);
 
-  if(readLeft == HIGH)
-    handleRIGHTInterrupt();
-
-  else if(readRight == HIGH)
-    handleLEFTInterrupt();
-    */
-
-  if (dead)
-  {
-    while(true)
-    {
-
-    }
+  if (dead) {
+    //TODO: GÖR NÅGOT, loopa lampor typ
+    //GÖR EN LEDSEN GUBBE
+    Serial.write(0);
+    turnOnLED(rowPlayer,0);
   }
+
+  //Reading and debouncing right button
   byte reading = digitalRead(buttonPin1);
 
   if (reading != lastButtonState1) {
@@ -203,8 +181,8 @@ void loop() {
 
   lastButtonState1 = reading;
 
-  //////
 
+  //Reading and debouncing left button
   reading = digitalRead(buttonPin2);
 
   if (reading != lastButtonState2) {
@@ -221,29 +199,38 @@ void loop() {
     }
   }
 
-
   lastButtonState2 = reading;
 
 
+  //Special case to turn on the player row at the beginning before first movement
   if (first) {
     turnOnLED(rowPlayer, currentPlayerPos);
     first = false;
   }
 
 
-  int currentTime = millis();
   //Checking if it's been more time than 'updateFrequency' since last update
+  int currentTime = millis();
   if (currentTime - lastUpdate > updateFrequency) {
     if (checkCollision()) {
       life--;
-      dead = true;
+      //TODO: Sänk livlampa
+      if(life == 0)
+      {
+        dead = true;
+      }
     }
 
     updateGrid();
     lastUpdate = millis();
-    if (updateFrequency < 300)
-      updateFrequency = updateFrequency - gameEsculate;
   }
+
+  if (millis() > (updates * 5000)){
+      if (updateFrequency > 300) {
+        updateFrequency = updateFrequency - gameEsculate;
+      }
+      updates++;
+    }
 }
 
 //Function that checks if player is hit by a stone
@@ -259,15 +246,6 @@ void updateGrid() {
   //Randomise a position for new stone for the first row
   int newStonePos = random(0, 6);
 
-  //Update game logic
-  for (int i = 0; i < 5; i++) {
-    rad6[i] = rad5[i];
-    rad5[i] = rad4[i];
-    rad4[i] = rad3[i];
-    rad3[i] = rad2[i];
-    rad2[i] = rad1[i];
-    rad1[i] = 0;
-  }
   row6Pos = row5Pos;
   row5Pos = row4Pos;
   row4Pos = row3Pos;
@@ -278,6 +256,4 @@ void updateGrid() {
   //Send info about new stone position to the sub-unit to update the electronics
   Serial.write(newStonePos);
 
-  //Update stone position in row 1 for game logic
-  rad1[newStonePos] = 1;
 }

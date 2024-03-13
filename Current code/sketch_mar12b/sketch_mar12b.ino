@@ -27,6 +27,18 @@ int row6Pos{};
 //Function to turn on specific LED in specific row
 void turnOnLED(const byte row[], int LEDon) {
   switch (LEDon) {
+    case 0:
+    {
+        pinMode(row[0], INPUT);
+        digitalWrite(row[0], LOW);
+        pinMode(row[1], OUTPUT);
+        digitalWrite(row[1], LOW);
+        pinMode(row[2], OUTPUT);
+        digitalWrite(row[2], LOW);
+        
+        break;
+    }
+
     case 1:
       {
         pinMode(row[0], INPUT);
@@ -89,6 +101,17 @@ void turnOnLED(const byte row[], int LEDon) {
 }
 void turnOnLEDAnalog(const byte row[], int LEDon) {
   switch (LEDon) {
+    case 0:
+    {
+        pinMode(row[0], INPUT);
+        digitalWrite(row[0], 0);
+        pinMode(row[1], OUTPUT);
+        digitalWrite(row[1], 0);
+        pinMode(row[2], OUTPUT);
+        digitalWrite(row[2], 0);
+
+        break;
+    }
     case 1:
       {
         pinMode(row[0], INPUT);
