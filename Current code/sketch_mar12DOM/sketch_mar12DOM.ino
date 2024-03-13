@@ -10,8 +10,15 @@ const int buttonPin2 = 8;  //Left-button pin (GREY)
 
 //player pins
 const byte rowPlayer[3]{ 13, 12, 11 };
+//analog pin to get a radnom value
+byte randomPin = A0;
 
-//nya
+
+
+
+//Variables
+
+//Row positions
 int row1Pos{};  //Position for the stone in each row
 int row2Pos{};
 int row3Pos{};
@@ -19,7 +26,8 @@ int row4Pos{};
 int row5Pos{};
 int row6Pos{};
 
-//int points = 0;
+bool dead = false;
+
 
 int currentPlayerPos = 3;  //Also used for elecronic logic
 int life = 3;
@@ -150,14 +158,15 @@ void setup() {
   Serial.begin(9600);
 }
 
-bool dead = false;
 
 void loop() {
   //Function loop
 
   if (dead) {
+    int score = millis();
+    //TODO: Skriv in score till en textfil
     //TODO: GÖR NÅGOT, loopa lampor typ
-    //GÖR EN LEDSEN GUBBE
+    //TODO: GÖR EN LEDSEN GUBBE
     Serial.write(0);
     turnOnLED(rowPlayer,0);
   }
@@ -205,6 +214,8 @@ void loop() {
   //Special case to turn on the player row at the beginning before first movement
   if (first) {
     turnOnLED(rowPlayer, currentPlayerPos);
+    int randomValue = analogRead(randomPin);
+    randomSeed(randomValue);
     first = false;
   }
 
