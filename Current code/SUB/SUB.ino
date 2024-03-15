@@ -207,8 +207,8 @@ void updateGrid(int newStonePos)
     turnOnLED(rowIn2, 6);
     turnOnLED(rowIn3, 0);
     turnOnLED(rowIn4, 3);
-    turnOnLED(rowIn5, 6);
-    turnOnLED(rowIn6, 0);
+    turnOnLEDAnalog(rowIn5, 6);
+    turnOnLEDAnalog(rowIn6, 0);
     return;
   }
 
