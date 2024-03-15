@@ -8,4 +8,4 @@ This project uses [Charlieplexing](https://en.wikipedia.org/wiki/Charlieplexing)
 two buttons to control player movement
 
 ## Overview Image
-![Overview Image of Project](Asseets/Overview.jpg)
+![Overview Image of Project](Asseets/Screenshot 2024-03-15 162034.png)
