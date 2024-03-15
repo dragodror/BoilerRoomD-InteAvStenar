@@ -5,13 +5,16 @@
 
 //Constants for Electronics
 
-const int buttonPin1 = 9;  //Right-button pin (WHITE)
-const int buttonPin2 = 8;  //Left-button pin (GREY)
+const byte buttonPin1 = 9;  //Right-button pin (WHITE)
+const byte buttonPin2 = 8;  //Left-button pin (GREY)
+const byte BUZZER_PIN = 2;
 
 //player pins
 const byte rowPlayer[3]{ 13, 12, 11 };
 //analog pin to get a radnom value
 byte randomPin = A0;
+
+const byte lifeLEDPins[3]{7,6,5};
 
 
 
@@ -162,7 +165,7 @@ void setup() {
 void loop() {
   //Function loop
 
-  if (dead) {
+  while (dead) {
     int score = millis();
     //TODO: Skriv in score till en textfil
     //TODO: GÖR NÅGOT, loopa lampor typ
@@ -217,6 +220,9 @@ void loop() {
     int randomValue = analogRead(randomPin);
     randomSeed(randomValue);
     first = false;
+    digitalWrite(lifeLEDPins[0],HIGH);
+    digitalWrite(lifeLEDPins[1],HIGH);
+    digitalWrite(lifeLEDPins[2],HIGH);
   }
 
 
@@ -225,7 +231,11 @@ void loop() {
   if (currentTime - lastUpdate > updateFrequency) {
     if (checkCollision()) {
       life--;
+      tone(BUZZER_PIN, 500);
+      delay(100);
+      noTone(BUZZER_PIN);
       //TODO: Sänk livlampa
+      digitalWrite(lifeLEDPins[first],LOW);
       if(life == 0)
       {
         dead = true;
