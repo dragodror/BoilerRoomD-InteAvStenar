@@ -9,3 +9,5 @@ two buttons to control player movement
 
 ## Overview Image
 ![Overview Image of Project](Asseets/Screenshot 2024-03-15 162034.png)
+
+To run the code you first need to download Arduino IDE and have two arduinos Connected as Dom and Sub with a UART connection.
