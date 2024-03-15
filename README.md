@@ -6,3 +6,6 @@ Implementing this project using arduino for the visual representation.
 
 This project uses [Charlieplexing](https://en.wikipedia.org/wiki/Charlieplexing) model for 6 field rows and one player row and
 two buttons to control player movement
+
+## Overview Image
+![Overview Image of Project](Asseets/Overview.jpg)

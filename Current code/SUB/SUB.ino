@@ -29,7 +29,7 @@ void turnOnLED(const byte row[], int LEDon) {
   switch (LEDon) {
     case 0:
     {
-        pinMode(row[0], INPUT);
+        pinMode(row[0], OUTPUT);
         digitalWrite(row[0], LOW);
         pinMode(row[1], OUTPUT);
         digitalWrite(row[1], LOW);
@@ -97,13 +97,24 @@ void turnOnLED(const byte row[], int LEDon) {
         
         break;
       }
+    case 6:
+    {
+        pinMode(row[0], INPUT);
+        digitalWrite(row[0], LOW);
+        pinMode(row[1], OUTPUT);
+        digitalWrite(row[1], HIGH);
+        pinMode(row[2], OUTPUT);
+        digitalWrite(row[2], LOW);
+
+      break;
+    }
   }
 }
 void turnOnLEDAnalog(const byte row[], int LEDon) {
   switch (LEDon) {
     case 0:
     {
-        pinMode(row[0], INPUT);
+        pinMode(row[0], OUTPUT);
         digitalWrite(row[0], 0);
         pinMode(row[1], OUTPUT);
         digitalWrite(row[1], 0);
@@ -170,6 +181,17 @@ void turnOnLEDAnalog(const byte row[], int LEDon) {
         
         break;
       }
+    case 6:
+    {
+        pinMode(row[0], INPUT);
+        digitalWrite(row[0], 0);
+        pinMode(row[1], OUTPUT);
+        digitalWrite(row[1], 0);
+        pinMode(row[2], OUTPUT);
+        digitalWrite(row[2], 1023);
+
+      break;
+    }
   }
 }
 
@@ -178,6 +200,28 @@ void turnOnLEDAnalog(const byte row[], int LEDon) {
 // spawned and the position of that stone is sent to the sub-arduino
 void updateGrid(int newStonePos)
 {
+  if (newStonePos == 100)
+  {
+    //Code for lighting LED in a sad face-pattern
+    turnOnLED(rowIn1, 6);
+    turnOnLED(rowIn2, 6);
+    turnOnLED(rowIn3, 0);
+    turnOnLEDAnalog(rowIn6, 0);
+    while(true)
+    {
+      turnOnLED(rowIn4, 2);
+      delay(1);
+      turnOnLED(rowIn4, 3);
+      delay(1);
+      turnOnLED(rowIn4, 4);
+      delay(1);
+      turnOnLEDAnalog(rowIn5, 1);
+      delay(1);
+      turnOnLEDAnalog(rowIn5, 5);
+    }
+    return;
+  }
+
   turnOnLEDAnalog(rowIn6, row5Pos);
   row6Pos = row5Pos;
   turnOnLEDAnalog(rowIn5, row4Pos);
@@ -190,6 +234,8 @@ void updateGrid(int newStonePos)
   row2Pos = row1Pos;
   turnOnLED(rowIn1, newStonePos);
   row1Pos = newStonePos;
+
+  //Lighting up a sad face, probably
 }
 
 

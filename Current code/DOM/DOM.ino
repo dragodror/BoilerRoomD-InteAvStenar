@@ -5,13 +5,16 @@
 
 //Constants for Electronics
 
-const int buttonPin1 = 9;  //Right-button pin (WHITE)
-const int buttonPin2 = 8;  //Left-button pin (GREY)
+const byte buttonPin1 = 9;  //Right-button pin (WHITE)
+const byte buttonPin2 = 8;  //Left-button pin (GREY)
+const byte BUZZER_PIN = 2;
 
 //player pins
 const byte rowPlayer[3]{ 13, 12, 11 };
 //analog pin to get a radnom value
 byte randomPin = A0;
+
+const byte lifeLEDPins[3]{7,6,5};
 
 
 
@@ -30,11 +33,11 @@ bool dead = false;
 
 
 int currentPlayerPos = 3;  //Also used for elecronic logic
-int life = 3;
+int life = 2;
 
 
 //Variables constants for time management
-int updateFrequency = 800;  //starting speed for the game
+int updateFrequency = 900;  //starting speed for the game
 int lastUpdate{};
 int gameEsculate = 200;
 int updates{ 1 };
@@ -162,13 +165,13 @@ void setup() {
 void loop() {
   //Function loop
 
-  if (dead) {
+  while (dead) {
     int score = millis();
     //TODO: Skriv in score till en textfil
     //TODO: GÖR NÅGOT, loopa lampor typ
     //TODO: GÖR EN LEDSEN GUBBE
-    Serial.write(0);
     turnOnLED(rowPlayer,0);
+    Serial.write(100);
   }
 
   //Reading and debouncing right button
@@ -217,6 +220,9 @@ void loop() {
     int randomValue = analogRead(randomPin);
     randomSeed(randomValue);
     first = false;
+    digitalWrite(lifeLEDPins[0],HIGH);
+    digitalWrite(lifeLEDPins[1],HIGH);
+    digitalWrite(lifeLEDPins[2],HIGH);
   }
 
 
@@ -224,9 +230,14 @@ void loop() {
   int currentTime = millis();
   if (currentTime - lastUpdate > updateFrequency) {
     if (checkCollision()) {
-      life--;
+      tone(BUZZER_PIN, 500);
+      delay(100);
+      noTone(BUZZER_PIN);
       //TODO: Sänk livlampa
-      if(life == 0)
+      digitalWrite(lifeLEDPins[life],LOW);
+      life--;
+
+      if(life < 0)
       {
         dead = true;
       }
@@ -237,7 +248,7 @@ void loop() {
   }
 
   if (millis() > (updates * 5000)){
-      if (updateFrequency > 300) {
+      if (updateFrequency > 200) {
         updateFrequency = updateFrequency - gameEsculate;
       }
       updates++;
