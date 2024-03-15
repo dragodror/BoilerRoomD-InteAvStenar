@@ -33,11 +33,11 @@ bool dead = false;
 
 
 int currentPlayerPos = 3;  //Also used for elecronic logic
-int life = 3;
+int life = 2;
 
 
 //Variables constants for time management
-int updateFrequency = 800;  //starting speed for the game
+int updateFrequency = 900;  //starting speed for the game
 int lastUpdate{};
 int gameEsculate = 200;
 int updates{ 1 };
@@ -170,8 +170,8 @@ void loop() {
     //TODO: Skriv in score till en textfil
     //TODO: GÖR NÅGOT, loopa lampor typ
     //TODO: GÖR EN LEDSEN GUBBE
-    Serial.write(0);
     turnOnLED(rowPlayer,0);
+    Serial.write(100);
   }
 
   //Reading and debouncing right button
@@ -230,13 +230,14 @@ void loop() {
   int currentTime = millis();
   if (currentTime - lastUpdate > updateFrequency) {
     if (checkCollision()) {
-      life--;
       tone(BUZZER_PIN, 500);
       delay(100);
       noTone(BUZZER_PIN);
       //TODO: Sänk livlampa
-      digitalWrite(lifeLEDPins[first],LOW);
-      if(life == 0)
+      digitalWrite(lifeLEDPins[life],LOW);
+      life--;
+
+      if(life < 0)
       {
         dead = true;
       }
@@ -247,7 +248,7 @@ void loop() {
   }
 
   if (millis() > (updates * 5000)){
-      if (updateFrequency > 300) {
+      if (updateFrequency > 200) {
         updateFrequency = updateFrequency - gameEsculate;
       }
       updates++;

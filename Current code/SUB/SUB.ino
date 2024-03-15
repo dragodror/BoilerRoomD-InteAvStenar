@@ -200,15 +200,25 @@ void turnOnLEDAnalog(const byte row[], int LEDon) {
 // spawned and the position of that stone is sent to the sub-arduino
 void updateGrid(int newStonePos)
 {
-  if (newStonePos == 0)
+  if (newStonePos == 100)
   {
     //Code for lighting LED in a sad face-pattern
-    turnOnLED(rowIn1, 0);
+    turnOnLED(rowIn1, 6);
     turnOnLED(rowIn2, 6);
     turnOnLED(rowIn3, 0);
-    turnOnLED(rowIn4, 3);
-    turnOnLEDAnalog(rowIn5, 6);
     turnOnLEDAnalog(rowIn6, 0);
+    while(true)
+    {
+      turnOnLED(rowIn4, 2);
+      delay(1);
+      turnOnLED(rowIn4, 3);
+      delay(1);
+      turnOnLED(rowIn4, 4);
+      delay(1);
+      turnOnLEDAnalog(rowIn5, 1);
+      delay(1);
+      turnOnLEDAnalog(rowIn5, 5);
+    }
     return;
   }
 
