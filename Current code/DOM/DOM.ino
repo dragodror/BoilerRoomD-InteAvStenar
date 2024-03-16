@@ -7,7 +7,7 @@
 
 const byte buttonPin1 = 9;  //Right-button pin (WHITE)
 const byte buttonPin2 = 8;  //Left-button pin (GREY)
-const byte BUZZER_PIN = 2;
+const byte buzzerPin = 2;
 
 //player pins
 const byte rowPlayer[3]{ 13, 12, 11 };
@@ -230,9 +230,9 @@ void loop() {
   int currentTime = millis();
   if (currentTime - lastUpdate > updateFrequency) {
     if (checkCollision()) {
-      tone(BUZZER_PIN, 500);
+      tone(buzzerPin, 500);
       delay(100);
-      noTone(BUZZER_PIN);
+      noTone(buzzerPin);
       //TODO: Sänk livlampa
       digitalWrite(lifeLEDPins[life],LOW);
       life--;
