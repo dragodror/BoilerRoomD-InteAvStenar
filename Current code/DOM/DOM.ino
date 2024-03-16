@@ -192,11 +192,9 @@ void setup() {
 void loop() {
   //Function loop
 
+  //loop for when the player lost the game
   while (dead) {
     int score = millis();
-    //TODO: Skriv in score till en textfil
-    //TODO: GÖR NÅGOT, loopa lampor typ
-    //TODO: GÖR EN LEDSEN GUBBE
     turnOnLED(rowPlayer,0);
     Serial.write(100);
   }
@@ -256,11 +254,11 @@ void loop() {
   //Checking if it's been more time than 'updateFrequency' since last update
   int currentTime = millis();
   if (currentTime - lastUpdate > updateFrequency) {
+    //Checking for collision when the stone would have droped down to the player row
     if (checkCollision()) {
       tone(buzzerPin, 500);
       delay(100);
       noTone(buzzerPin);
-      //TODO: Sänk livlampa
       digitalWrite(lifeLEDPins[life],LOW);
       life--;
 
