@@ -182,6 +182,9 @@ void updateGrid() {
 void setup() {
   pinMode(buttonPin1, INPUT);
   pinMode(buttonPin2, INPUT);
+  pinMode(lifeLEDPins[0], OUTPUT);
+  pinMode(lifeLEDPins[1], OUTPUT);
+  pinMode(lifeLEDPins[2], OUTPUT);
   Serial.begin(9600);
 }
 
