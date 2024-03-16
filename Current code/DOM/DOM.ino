@@ -155,6 +155,30 @@ void moveLeft() {
   turnOnLED(rowPlayer, currentPlayerPos);
 }
 
+//Function that checks if player is hit by a stone
+bool checkCollision() {
+  if (currentPlayerPos == row6Pos)
+    return true;
+  return false;
+}
+
+//Function for spawning a new stone and then updates the grid accordingly
+void updateGrid() {
+  //Randomise a position for new stone for the first row
+  int newStonePos = random(0, 6);
+
+  row6Pos = row5Pos;
+  row5Pos = row4Pos;
+  row4Pos = row3Pos;
+  row3Pos = row2Pos;
+  row2Pos = row1Pos;
+  row1Pos = newStonePos;
+
+  //Send info about new stone position to the sub-unit to update the electronics
+  Serial.write(newStonePos);
+
+}
+
 void setup() {
   pinMode(buttonPin1, INPUT);
   pinMode(buttonPin2, INPUT);
@@ -253,29 +277,4 @@ void loop() {
       }
       updates++;
     }
-}
-
-//Function that checks if player is hit by a stone
-bool checkCollision() {
-  if (currentPlayerPos == row6Pos)
-    return true;
-  return false;
-}
-
-
-//Function for spawning a new stone and then updates the grid accordingly
-void updateGrid() {
-  //Randomise a position for new stone for the first row
-  int newStonePos = random(0, 6);
-
-  row6Pos = row5Pos;
-  row5Pos = row4Pos;
-  row4Pos = row3Pos;
-  row3Pos = row2Pos;
-  row2Pos = row1Pos;
-  row1Pos = newStonePos;
-
-  //Send info about new stone position to the sub-unit to update the electronics
-  Serial.write(newStonePos);
-
 }
