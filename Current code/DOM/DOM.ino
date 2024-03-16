@@ -14,6 +14,7 @@ const byte rowPlayer[3]{ 13, 12, 11 };
 //analog pin to get a radnom value
 byte randomPin = A0;
 
+//life-LED pins
 const byte lifeLEDPins[3]{7,6,5};
 
 
@@ -21,18 +22,19 @@ const byte lifeLEDPins[3]{7,6,5};
 
 //Variables
 
-//Row positions
-int row1Pos{};  //Position for the stone in each row
+//position for the stone in each row and for the player (used by checkCollition)
+int row1Pos{};  
 int row2Pos{};
 int row3Pos{};
 int row4Pos{};
 int row5Pos{};
 int row6Pos{};
-
-bool dead = false;
-
-
 int currentPlayerPos = 3;  //Also used for elecronic logic
+
+
+//variables to controll stard and end of game
+bool first = true;
+bool dead = false;
 int life = 2;
 
 
@@ -42,11 +44,8 @@ int lastUpdate{};
 int gameEsculate = 200;
 int updates{ 1 };
 
-bool first = true;
-
 
 //Debouncing variables
-
 const unsigned long debounceDelay = 50;
 
 byte lastButtonState1 = LOW;
@@ -56,6 +55,7 @@ unsigned long lastDebounceTime1 = 0;
 byte lastButtonState2 = LOW;
 byte buttonState2 = LOW;
 unsigned long lastDebounceTime2 = 0;
+
 
 
 void turnOnLED(const byte row[], int LEDon) {
